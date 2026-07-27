@@ -5,6 +5,8 @@ from pydoc import cli
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from prompts import system_prompt
+
 
 def _arg_parsin() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Chatbot")
@@ -15,7 +17,10 @@ def _arg_parsin() -> argparse.Namespace:
 
 
 def returning_response(client, model, args):
-    messages = [{"role": "user", "content": args.user_prompt}]
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": args.user_prompt},
+    ]
     response = client.chat.completions.create(model=model, messages=messages)
     if args.verbose:
         print(f"User prompt: {args.user_prompt}")
