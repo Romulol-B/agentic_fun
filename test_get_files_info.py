@@ -1,6 +1,6 @@
 import unittest
 
-from get_files_info import get_files_info
+from functions.get_files_info import get_files_info
 
 
 class TestPath(unittest.TestCase):

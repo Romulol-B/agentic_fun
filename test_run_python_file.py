@@ -1,5 +1,4 @@
 import unittest
-from string import printable
 
 from functions.run_python_file import run_python_file
 
