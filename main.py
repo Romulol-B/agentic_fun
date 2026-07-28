@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from functions.call_function import available_functions
+from functions.call_function import available_functions, call_function
 from prompts import system_prompt
 
 
@@ -17,7 +17,7 @@ def _arg_parsin() -> argparse.Namespace:
     return args
 
 
-def returning_response(client, model, args):
+def returning_response(client: OpenAI, model, args):
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": args.user_prompt},
@@ -32,9 +32,15 @@ def returning_response(client, model, args):
             print(f"Response tokens: {response.usage.completion_tokens}")
     print(f"Response:\n {response.choices[0].message.content}")
     message = response.choices[0].message
-    for tool_call in message.tool_calls:
-        function_args = json.loads(tool_call.function.arguments or "{}")
-        print(f"Calling function: {tool_call.function.name}({function_args})")
+    for tool_call in message.tool_calls or []:
+        # function_args = json.loads(tool_call.function.arguments or "{}")
+        result_message = call_function(tool_call, args.verbose)
+        if result_message["content"] == "":
+            raise Exception("Empty content")
+        if args.verbose:
+            print(f"-> {result_message['content']}")
+        else:
+            print(result_message["content"])
 
 
 def main():
