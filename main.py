@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import sys
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -25,22 +26,32 @@ def returning_response(client: OpenAI, model, args):
     response = client.chat.completions.create(
         model=model, messages=messages, tools=available_functions
     )
-    if args.verbose:
-        print(f"User prompt: {args.user_prompt}")
-        if response.usage is not None:
-            print(f"Prompt tokens: {response.usage.prompt_tokens}")
-            print(f"Response tokens: {response.usage.completion_tokens}")
-    print(f"Response:\n {response.choices[0].message.content}")
-    message = response.choices[0].message
-    for tool_call in message.tool_calls or []:
-        # function_args = json.loads(tool_call.function.arguments or "{}")
-        result_message = call_function(tool_call, args.verbose)
-        if result_message["content"] == "":
-            raise Exception("Empty content")
+    for _ in range(20):
         if args.verbose:
-            print(f"-> {result_message['content']}")
-        else:
-            print(result_message["content"])
+            print(f"User prompt: {args.user_prompt}")
+            if response.usage is not None:
+                print(f"Prompt tokens: {response.usage.prompt_tokens}")
+                print(f"Response tokens: {response.usage.completion_tokens}")
+        print(f"Response:\n {response.choices[0].message.content}")
+        message = response.choices[0].message
+        messages.append(message)
+        if message.tool_calls == None:
+            return
+        for tool_call in message.tool_calls or []:
+            # function_args = json.loads(tool_call.function.arguments or "{}")
+            result_message = call_function(tool_call, args.verbose)
+            # if result_message["content"] == "":
+            #    raise Exception("Empty content")
+            if args.verbose:
+                print(f"-> {result_message['content']}")
+            else:
+                print(result_message["content"])
+            messages.append(result_message)
+        response = client.chat.completions.create(
+            model=model, messages=messages, tools=available_functions
+        )
+
+    sys.exit(1)
 
 
 def main():
