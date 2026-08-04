@@ -12,4 +12,23 @@ From LLM API calls to agent context aware and a specialized tool_set from the CL
 
 Functions folder has all the functions that the agent is allowed to call.
 
+## Motivation.
+
+My intention is this project to grow and be the agent that perform from the action list and be less prone to hallucination.
+
+### Quick start:
+Remember before any prompt you need setup your API keys on a .env file.
+
+```bash
+git clone https://github.com/Romulol-B/agentic_fun
+uv .venv venv
+source .venv/bin/activate
+uv main.py [-h] [--verbose] user_prompt
+```
+- positional arguments:
+    - user_prompt User prompt
+- options:
+    - -h, --help show a help message and exit.
+    - --verbose  Enable verbose output.
+
 
