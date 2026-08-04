@@ -30,5 +30,6 @@ uv main.py [-h] [--verbose] user_prompt
 - options:
     - -h, --help show a help message and exit.
     - --verbose  Enable verbose output.
+<img width="700" height="300" alt="terminal" src="https://github.com/user-attachments/assets/b6cd95c5-3fcb-45e4-bc20-a61875f60ec2" />
 
 
