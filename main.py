@@ -36,7 +36,7 @@ def returning_response(client: OpenAI, model, args):
         message = response.choices[0].message
         messages.append(message)
         if message.tool_calls == None:
-            print("AHHHHHHHHHHHHHHHH")
+            print("ah")
             return
         for tool_call in message.tool_calls or []:
             # function_args = json.loads(tool_call.function.arguments or "{}")
